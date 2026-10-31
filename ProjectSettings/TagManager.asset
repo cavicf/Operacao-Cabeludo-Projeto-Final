@@ -44,5 +44,8 @@ TagManager:
   - name: Background
     uniqueID: 1942937003
     locked: 0
+  - name: Professor
+    uniqueID: 1530245311
+    locked: 0
   m_RenderingLayers:
   - Default
