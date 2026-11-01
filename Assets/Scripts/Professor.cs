@@ -19,6 +19,7 @@ public class Professor : MonoBehaviour
         impulsoSubida = 7.5f;
         gravidadeSubida = 2.5f;
         gravidadeQueda = 4;
+        pontos = 0;
     }
 
     void FixedUpdate()
@@ -62,6 +63,9 @@ public class Professor : MonoBehaviour
         {
             return;
         }
+
+        GameData.jogou = true;
+        GameData.pontuacao = pontos;
         
         SceneManager.LoadScene("MainMenu");
     }
