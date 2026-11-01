@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class Professor : MonoBehaviour
 {
@@ -7,6 +8,9 @@ public class Professor : MonoBehaviour
     float impulsoSubida;
     float gravidadeSubida;
     float gravidadeQueda;
+
+    int pontos;
+    [SerializeField] TMP_Text ScoreText;
     void Awake()
     {
         // Pegando a referencia do Rigidbody do professor
@@ -38,5 +42,15 @@ public class Professor : MonoBehaviour
     void OnJump()
     {
         rb.linearVelocityY = impulsoSubida;
+    }
+    
+    // chamado quando o professor passa pelas maquinas
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Ponto"))
+        {
+            pontos++;
+            ScoreText.text = pontos.ToString();
+        }
     }
 }
