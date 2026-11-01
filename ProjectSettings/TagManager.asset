@@ -47,5 +47,11 @@ TagManager:
   - name: Professor
     uniqueID: 1530245311
     locked: 0
+  - name: HairClippers
+    uniqueID: 189814653
+    locked: 0
+  - name: Floor
+    uniqueID: 1088119295
+    locked: 0
   m_RenderingLayers:
   - Default
