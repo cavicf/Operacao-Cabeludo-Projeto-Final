@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class Professor : MonoBehaviour
 {
@@ -52,5 +53,16 @@ public class Professor : MonoBehaviour
             pontos++;
             ScoreText.text = pontos.ToString();
         }
+    }
+    
+    // chamado quando o professor bate no chão ou nas maquinas
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Roof"))
+        {
+            return;
+        }
+        
+        SceneManager.LoadScene("MainMenu");
     }
 }
