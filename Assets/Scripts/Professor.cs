@@ -14,6 +14,11 @@ public class Professor : MonoBehaviour
     int pontos;
     [SerializeField] TMP_Text ScoreText;
 
+    // sprites do professor, do careca (0) ate o cabelo maximo (20)
+    [SerializeField] Sprite[] calveludo;
+    int nivelCabelo;
+    int pontosPorNivel = 5;
+
     // tela de "prepare-se": o jogo so comeca no primeiro pulo
     bool comecou;
     [SerializeField] GameObject textoInicio;
@@ -30,6 +35,8 @@ public class Professor : MonoBehaviour
         gravidadeSubida = 2.5f;
         gravidadeQueda = 4;
         pontos = 0;
+        nivelCabelo = 0;
+        AtualizarCabelo();
 
         // professor parado no ar ate o jogador apertar espaco
         rb.simulated = false;
@@ -82,7 +89,28 @@ public class Professor : MonoBehaviour
         {
             pontos++;
             ScoreText.text = pontos.ToString();
+
+            // a cada 5 pontos o professor ganha mais cabelo
+            if (pontos % pontosPorNivel == 0)
+            {
+                SubirNivel();
+            }
         }
+    }
+
+    void SubirNivel()
+    {
+        // nao passa do ultimo sprite
+        if (nivelCabelo < calveludo.Length - 1)
+        {
+            nivelCabelo++;
+            AtualizarCabelo();
+        }
+    }
+
+    void AtualizarCabelo()
+    {
+        sr.sprite = calveludo[nivelCabelo];
     }
 
     // chamado quando o professor bate no chão, no teto ou nas maquinas

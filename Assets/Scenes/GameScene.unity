@@ -332,7 +332,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -4242950842487294134, guid: 343bcc3d60c793cd78385109039558cf, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 23e745ea7e26937c8b43bdf93309de30, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -400,6 +400,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Professor
   ScoreText: {fileID: 1097494534}
+  calveludo:
+  - {fileID: 21300000, guid: 23e745ea7e26937c8b43bdf93309de30, type: 3}
+  - {fileID: 21300000, guid: 29bd54e07eea76207a62d54471a4e5b2, type: 3}
+  - {fileID: 21300000, guid: 5ad97eb08aa18c4388a6d099c458ad04, type: 3}
+  - {fileID: 21300000, guid: 74237e7794b7e830a980521f71301456, type: 3}
+  - {fileID: 21300000, guid: 2f07a7b27e21e5b5e80a6e28e3252dfe, type: 3}
+  - {fileID: 21300000, guid: 6d257d711e3b5bcb9a492eb09847cd67, type: 3}
+  - {fileID: 21300000, guid: 669d03bda535b0acea7d555d1b988b04, type: 3}
+  - {fileID: 21300000, guid: 9239e1d13528f1d89bcdc86f8963df27, type: 3}
+  - {fileID: 21300000, guid: 534639b9e006feaeeb2041a7292b6c1e, type: 3}
+  - {fileID: 21300000, guid: 350d471e3633a007eaec1daa4cba75e7, type: 3}
+  - {fileID: 21300000, guid: 51a16e93167a6581bbab2dc3e2f381ff, type: 3}
+  - {fileID: 21300000, guid: a64a726f06877eb55841b42fda4a49cc, type: 3}
+  - {fileID: 21300000, guid: 1ad4b5702511f17688eca5dc2caa284a, type: 3}
+  - {fileID: 21300000, guid: 6bdc9697846d366e28e625df0df173c4, type: 3}
+  - {fileID: 21300000, guid: d9f640b73272d238abb616de9d02c591, type: 3}
+  - {fileID: 21300000, guid: 8ecdc714bdff28baaa96c5d40b2def5b, type: 3}
+  - {fileID: 21300000, guid: b73c2c21fda920eac83a9b009fa91934, type: 3}
+  - {fileID: 21300000, guid: be05c474fbee22df4939e40367187cff, type: 3}
+  - {fileID: 21300000, guid: d6d592ad187049034b2e00473b11f07b, type: 3}
+  - {fileID: 21300000, guid: a00fd572f635567b5b41504cf07084b0, type: 3}
+  - {fileID: 21300000, guid: ccb7d53c3e6be3e5da1a272b318b949f, type: 3}
   textoInicio: {fileID: 2095349735}
   spawner: {fileID: 497257033}
 --- !u!1 &88502986
