@@ -4,7 +4,11 @@ public class ShredderController : MonoBehaviour
 {
     void OnTriggerEnter2D(Collider2D other)
     {
-        // destroi as maquinas
-        Destroy(other.transform.parent.gameObject);
+        // so destroi objetos que se movem (maquinas), ignorando teto e chao
+        if (other.attachedRigidbody != null)
+        {
+            // destroi o objeto inteiro (o pai com o Rigidbody)
+            Destroy(other.attachedRigidbody.gameObject);
+        }
     }
 }

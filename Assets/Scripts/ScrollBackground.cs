@@ -1,15 +1,16 @@
 using UnityEngine;
 
-public class scrollBackground : MonoBehaviour
+public class ScrollBackground : MonoBehaviour
 {
     Material mat;
-    float velocity = 0.2f;
+    // fundo mais lento que o chao para dar efeito de profundidade (parallax)
+    [SerializeField] float velocity = 0.2f;
     float offsetX;
-    void Awake() 
+    void Awake()
     {
         mat = GetComponent<SpriteRenderer>().material;
     }
-    
+
     void Update()
     {
         offsetX += Time.deltaTime * velocity;
