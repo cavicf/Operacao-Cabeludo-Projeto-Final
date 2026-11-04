@@ -15,6 +15,10 @@ public class HairClippersSpawner : MonoBehaviour
     float proximaAltura;
     float alturaPowerUp;
 
+    // power-up que esta na tela agora (so pode existir um por vez)
+    GameObject powerUpNaTela;
+    bool powerUpAgendado;
+
     void Start()
     {
         proximaAltura = Random.Range(alturaMin, alturaMax);
@@ -33,20 +37,30 @@ public class HairClippersSpawner : MonoBehaviour
         Vector3 posicao = new Vector3(transform.position.x, alturaAtual, 0);
         Instantiate(HairClipperPrefab, posicao, Quaternion.identity);
 
-        // as vezes aparece um power-up no meio do caminho ate o proximo par
-        if (powerUpPrefabs.Length > 0 && Random.value < chancePowerUp)
+        // as vezes aparece um power-up no meio do caminho ate o proximo par,
+        // mas so se nao tiver nenhum outro na tela (ou para aparecer)
+        if (PodeSpawnarPowerUp() && Random.value < chancePowerUp)
         {
             // altura media entre o vao atual e o proximo
             alturaPowerUp = (alturaAtual + proximaAltura) / 2;
+            powerUpAgendado = true;
             Invoke("SpawnPowerUp", intervalo / 2);
         }
     }
 
+    bool PodeSpawnarPowerUp()
+    {
+        // o power-up anterior some quando e coletado ou destruido pelo Shredder
+        return powerUpPrefabs.Length > 0 && powerUpNaTela == null && !powerUpAgendado;
+    }
+
     void SpawnPowerUp()
     {
+        powerUpAgendado = false;
+
         // sorteia qual power-up vai aparecer
         GameObject prefab = powerUpPrefabs[Random.Range(0, powerUpPrefabs.Length)];
         Vector3 posicao = new Vector3(transform.position.x, alturaPowerUp, 0);
-        Instantiate(prefab, posicao, Quaternion.identity);
+        powerUpNaTela = Instantiate(prefab, posicao, Quaternion.identity);
     }
 }
