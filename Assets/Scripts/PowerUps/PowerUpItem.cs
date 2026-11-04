@@ -5,6 +5,7 @@ public enum TipoPowerUp
 {
     Shampoo,
     Tonico,
+    Peruca,
 }
 
 // item coletavel que aparece entre as maquinas
@@ -21,6 +22,8 @@ public class PowerUpItem : MonoBehaviour
                 return new Shampoo();
             case TipoPowerUp.Tonico:
                 return new Tonico();
+            case TipoPowerUp.Peruca:
+                return new Peruca();
             default:
                 return null;
         }

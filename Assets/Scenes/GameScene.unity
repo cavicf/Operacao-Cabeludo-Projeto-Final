@@ -687,6 +687,7 @@ MonoBehaviour:
   powerUpPrefabs:
   - {fileID: 63180684800517072, guid: d7d58846207aaa944a62a7d844c3dcb5, type: 3}
   - {fileID: 7104698510104547751, guid: 0f51d42a0bd0e764ca565ae8268442e9, type: 3}
+  - {fileID: 5771896025755308441, guid: 4ec61a55dcce4c347ad0c1f745be86ac, type: 3}
   chancePowerUp: 0.25
 --- !u!4 &497257034
 Transform:

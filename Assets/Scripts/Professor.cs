@@ -33,6 +33,9 @@ public class Professor : MonoBehaviour
     IPowerUp powerUpAtual;
     float tempoPowerUp;
 
+    // escudo da peruca: aguenta uma batida em maquina
+    public bool TemEscudo { get; set; }
+
     // tela de "prepare-se": o jogo so comeca no primeiro pulo
     bool comecou;
     [SerializeField] GameObject textoInicio;
@@ -202,6 +205,14 @@ public class Professor : MonoBehaviour
     {
         if (morreu)
         {
+            return;
+        }
+
+        // com a peruca, a batida em maquina destroi a maquina e gasta o escudo
+        if (TemEscudo && collision.collider.GetComponentInParent<HairClipperController>() != null)
+        {
+            Destroy(collision.collider.gameObject);
+            DesativarPowerUp();
             return;
         }
 
