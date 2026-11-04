@@ -33,8 +33,23 @@ public class Professor : MonoBehaviour
     IPowerUp powerUpAtual;
     float tempoPowerUp;
 
+    // efeito visual do power-up (bolhas, brilho, peruca) preso no professor
+    GameObject efeitoAtual;
+
     // escudo da peruca: aguenta uma batida em maquina
     public bool TemEscudo { get; set; }
+
+    // com a peruca o cabelo de verdade fica escondido (mostra o careca por baixo)
+    bool esconderCabelo;
+    public bool EsconderCabelo
+    {
+        get { return esconderCabelo; }
+        set
+        {
+            esconderCabelo = value;
+            AtualizarCabelo();
+        }
+    }
 
     // tela de "prepare-se": o jogo so comeca no primeiro pulo
     bool comecou;
@@ -120,7 +135,7 @@ public class Professor : MonoBehaviour
         {
             // pega a estrategia do item e some com ele da tela
             PowerUpItem item = other.GetComponentInParent<PowerUpItem>();
-            AplicarPowerUp(item.CriarPowerUp());
+            AplicarPowerUp(item.CriarPowerUp(), item.EfeitoNoProfessor);
             Destroy(item.gameObject);
         }
     }
@@ -139,7 +154,7 @@ public class Professor : MonoBehaviour
         }
     }
 
-    public void AplicarPowerUp(IPowerUp powerUp)
+    public void AplicarPowerUp(IPowerUp powerUp, GameObject efeitoPrefab = null)
     {
         if (powerUp == null)
         {
@@ -152,7 +167,20 @@ public class Professor : MonoBehaviour
         powerUpAtual = powerUp;
         tempoPowerUp = powerUp.Duracao;
         powerUpAtual.Ativar(this);
-        sr.color = powerUp.Cor;
+
+        // coloca o efeito visual como filho do professor, para acompanhar ele
+        if (efeitoPrefab != null)
+        {
+            efeitoAtual = Instantiate(efeitoPrefab, transform);
+            efeitoAtual.transform.localPosition = Vector3.zero;
+
+            // bolhas e estrelas ficam com a cor do power-up
+            EfeitoAura aura = efeitoAtual.GetComponentInChildren<EfeitoAura>();
+            if (aura != null)
+            {
+                aura.DefinirCor(powerUp.Cor);
+            }
+        }
     }
 
     public void DesativarPowerUp()
@@ -165,9 +193,10 @@ public class Professor : MonoBehaviour
         powerUpAtual.Desativar(this);
         powerUpAtual = null;
 
-        if (!morreu)
+        if (efeitoAtual != null)
         {
-            sr.color = Color.white;
+            Destroy(efeitoAtual);
+            efeitoAtual = null;
         }
     }
 
@@ -197,7 +226,8 @@ public class Professor : MonoBehaviour
 
     void AtualizarCabelo()
     {
-        sr.sprite = calveludo[nivelCabelo];
+        // com a peruca mostra o careca (0); sem ela, o nivel de cabelo atual
+        sr.sprite = esconderCabelo ? calveludo[0] : calveludo[nivelCabelo];
     }
 
     // chamado quando o professor bate no chão, no teto ou nas maquinas

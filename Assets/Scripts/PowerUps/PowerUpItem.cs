@@ -13,6 +13,10 @@ public class PowerUpItem : MonoBehaviour
 {
     [SerializeField] TipoPowerUp tipo;
 
+    // efeito que aparece no professor enquanto o power-up estiver ativo
+    [SerializeField] GameObject efeitoNoProfessor;
+    public GameObject EfeitoNoProfessor { get { return efeitoNoProfessor; } }
+
     // cria a estrategia correspondente ao tipo escolhido no Inspector
     public IPowerUp CriarPowerUp()
     {

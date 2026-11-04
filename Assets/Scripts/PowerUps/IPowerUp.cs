@@ -7,7 +7,7 @@ public interface IPowerUp
     // quanto tempo (em segundos) o efeito dura
     float Duracao { get; }
 
-    // cor do professor enquanto o efeito esta ativo
+    // cor do efeito visual (bolhas, estrelas) enquanto o power-up esta ativo
     Color Cor { get; }
 
     // liga o efeito no professor

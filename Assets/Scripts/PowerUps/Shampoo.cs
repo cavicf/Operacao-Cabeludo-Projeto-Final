@@ -4,7 +4,7 @@ using UnityEngine;
 public class Shampoo : IPowerUp
 {
     public float Duracao { get { return 8f; } }
-    public Color Cor { get { return new Color(0.4f, 0.8f, 1f); } }
+    public Color Cor { get { return new Color(0.7f, 0.9f, 1f); } }
 
     public void Ativar(Professor professor)
     {
