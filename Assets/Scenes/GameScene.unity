@@ -684,6 +684,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HairClippersSpawner
   HairClipperPrefab: {fileID: 152792742701630773, guid: 714efb49b8119c2aeb4e455c245a1864, type: 3}
+  powerUpPrefabs: []
+  chancePowerUp: 0.25
 --- !u!4 &497257034
 Transform:
   m_ObjectHideFlags: 0

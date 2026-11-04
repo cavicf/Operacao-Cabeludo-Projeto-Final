@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ponto
   - Roof
+  - PowerUp
   layers:
   - Default
   - TransparentFX
