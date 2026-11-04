@@ -17,7 +17,10 @@ public class Professor : MonoBehaviour
     // sprites do professor, do careca (0) ate o cabelo maximo (20)
     [SerializeField] Sprite[] calveludo;
     int nivelCabelo;
-    int pontosPorNivel = 5;
+
+    // quantos pontos sao necessarios para subir um nivel de cabelo
+    public const int PontosPorNivelPadrao = 5;
+    public int PontosPorNivel { get; set; } = PontosPorNivelPadrao;
 
     // pontos acumulados desde o ultimo nivel de cabelo
     // (contador separado para funcionar mesmo quando ganha mais de 1 ponto por vez)
@@ -125,10 +128,10 @@ public class Professor : MonoBehaviour
         contadorNivel += quantidade;
         ScoreText.text = pontos.ToString();
 
-        // a cada "pontosPorNivel" pontos o professor ganha mais cabelo
-        while (contadorNivel >= pontosPorNivel)
+        // a cada "PontosPorNivel" pontos o professor ganha mais cabelo
+        while (contadorNivel >= PontosPorNivel)
         {
-            contadorNivel -= pontosPorNivel;
+            contadorNivel -= PontosPorNivel;
             SubirNivel();
         }
     }

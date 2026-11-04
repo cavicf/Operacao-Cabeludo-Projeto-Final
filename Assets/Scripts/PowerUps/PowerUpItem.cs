@@ -4,6 +4,7 @@ using UnityEngine;
 public enum TipoPowerUp
 {
     Shampoo,
+    Tonico,
 }
 
 // item coletavel que aparece entre as maquinas
@@ -18,6 +19,8 @@ public class PowerUpItem : MonoBehaviour
         {
             case TipoPowerUp.Shampoo:
                 return new Shampoo();
+            case TipoPowerUp.Tonico:
+                return new Tonico();
             default:
                 return null;
         }
