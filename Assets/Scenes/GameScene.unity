@@ -400,6 +400,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Professor
   ScoreText: {fileID: 1097494534}
+  gerenciadorFases: {fileID: 1380988860}
   calveludo:
   - {fileID: 21300000, guid: 23e745ea7e26937c8b43bdf93309de30, type: 3}
   - {fileID: 21300000, guid: 29bd54e07eea76207a62d54471a4e5b2, type: 3}
@@ -683,7 +684,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 293e0f0c7d3ec4a26806041e07492a0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HairClippersSpawner
-  HairClipperPrefab: {fileID: 152792742701630773, guid: 714efb49b8119c2aeb4e455c245a1864, type: 3}
+  HairClipperPrefab: {fileID: 3583375932158634494, guid: 714efb49b8119c2aeb4e455c245a1864, type: 3}
+  gerenciadorFases: {fileID: 1380988860}
   powerUpPrefabs:
   - {fileID: 63180684800517072, guid: d7d58846207aaa944a62a7d844c3dcb5, type: 3}
   - {fileID: 7104698510104547751, guid: 0f51d42a0bd0e764ca565ae8268442e9, type: 3}
@@ -1284,6 +1286,72 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1097494532}
   m_CullTransparentMesh: 1
+--- !u!1 &1380988859
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1380988861}
+  - component: {fileID: 1380988860}
+  m_Layer: 0
+  m_Name: PhaseController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1380988860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1380988859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eeb0932961683a5c0bf779e42da76379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PhaseController
+  fases:
+  - nome: Aquecimento
+    pontosParaComecar: 0
+    vao: 4
+  - nome: Pegando o ritmo
+    pontosParaComecar: 10
+    vao: 3.6
+  - nome: "Infesta\xE7\xE3o"
+    pontosParaComecar: 20
+    vao: 3.6
+  - nome: Apertando
+    pontosParaComecar: 35
+    vao: 3.2
+  - nome: "M\xE1quinas vivas"
+    pontosParaComecar: 50
+    vao: 3.6
+  - nome: Caos
+    pontosParaComecar: 70
+    vao: 3.2
+  - nome: Mestre Cabeludo
+    pontosParaComecar: 90
+    vao: 3
+--- !u!4 &1380988861
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1380988859}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 950, y: 540, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1970133009
 GameObject:
   m_ObjectHideFlags: 0
@@ -1540,3 +1608,4 @@ SceneRoots:
   - {fileID: 75233624}
   - {fileID: 311934208}
   - {fileID: 798999588}
+  - {fileID: 1380988861}

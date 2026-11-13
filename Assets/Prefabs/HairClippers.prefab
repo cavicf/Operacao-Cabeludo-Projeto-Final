@@ -75,6 +75,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b30d869f7ee3a5eca7223b476081f68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HairClipperController
+  maquinaCima: {fileID: 4219496318767103838}
+  maquinaBaixo: {fileID: 7719714460247777440}
+  zonaPonto: {fileID: 7487449821778368538}
 --- !u!1 &2926847704325827825
 GameObject:
   m_ObjectHideFlags: 0

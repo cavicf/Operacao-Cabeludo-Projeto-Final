@@ -13,6 +13,8 @@ public class Professor : MonoBehaviour
 
     int pontos;
     [SerializeField] TMP_Text ScoreText;
+    
+    [SerializeField] PhaseController gerenciadorFases;
 
     // sprites do professor, do careca (0) ate o cabelo maximo (20)
     [SerializeField] Sprite[] calveludo;
@@ -145,6 +147,9 @@ public class Professor : MonoBehaviour
         pontos += quantidade;
         contadorNivel += quantidade;
         ScoreText.text = pontos.ToString();
+        
+        // verifica se os pontos ja alcancaram a proxima fase
+        gerenciadorFases.AtualizarFase(pontos);
 
         // a cada "PontosPorNivel" pontos o professor ganha mais cabelo
         while (contadorNivel >= PontosPorNivel)

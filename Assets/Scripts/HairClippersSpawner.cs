@@ -2,10 +2,13 @@ using UnityEngine;
 
 public class HairClippersSpawner : MonoBehaviour
 {
-    [SerializeField] GameObject HairClipperPrefab;
+    [SerializeField] HairClipperController HairClipperPrefab;
+    [SerializeField] PhaseController gerenciadorFases;
+    
     float intervalo = 1.8f;
-    float alturaMin = -2.2f;
-    float alturaMax = 3.2f;
+    float limiteLaminaBaixo = -3.8f;
+    float limiteLaminaCima = 4.4f;
+   
 
     // power-ups que podem aparecer entre as maquinas
     [SerializeField] GameObject[] powerUpPrefabs;
@@ -18,25 +21,39 @@ public class HairClippersSpawner : MonoBehaviour
     // power-up que esta na tela agora (so pode existir um por vez)
     GameObject powerUpNaTela;
     bool powerUpAgendado;
+    
+    // sorteia o centro do vao sem deixar as laminas sairem da area visivel
+    float SortearAltura(float vao)
+    {
+        float alturaMin = limiteLaminaBaixo + vao / 2;
+        float alturaMax = limiteLaminaCima - vao / 2;
+        return Random.Range(alturaMin, alturaMax);
+    }
 
     void Start()
     {
-        proximaAltura = Random.Range(alturaMin, alturaMax);
+        proximaAltura = SortearAltura(gerenciadorFases.FaseAtual.vao);
 
         // invoca o spawn de maquinas no instante 0 e depois a cada intervalo
         InvokeRepeating("SpawnHairClipper", 0, intervalo);
     }
 
+    
+    
     void SpawnHairClipper()
     {
+        // le as configuracoes da fase atual
+        Fase fase = gerenciadorFases.FaseAtual;
+        
         // usa a altura ja sorteada e sorteia a do proximo vao
         float alturaAtual = proximaAltura;
-        proximaAltura = Random.Range(alturaMin, alturaMax);
+        proximaAltura = SortearAltura(fase.vao);
 
-        // Instancia um novo par de maquinas no jogo
+        // Instancia um novo par de maquinas no jogo e ajusta o vao dele
         Vector3 posicao = new Vector3(transform.position.x, alturaAtual, 0);
-        Instantiate(HairClipperPrefab, posicao, Quaternion.identity);
-
+        HairClipperController par = Instantiate(HairClipperPrefab, posicao, Quaternion.identity);
+        par.DefinirVao(fase.vao);
+        
         // as vezes aparece um power-up no meio do caminho ate o proximo par,
         // mas so se nao tiver nenhum outro na tela (ou para aparecer)
         if (PodeSpawnarPowerUp() && Random.value < chancePowerUp)
