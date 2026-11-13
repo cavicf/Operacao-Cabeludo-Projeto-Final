@@ -116,6 +116,9 @@ public class Professor : MonoBehaviour
             rb.simulated = true;
             spawner.enabled = true;
             textoInicio.SetActive(false);
+            
+            // mostra o aviso da primeira fase
+            gerenciadorFases.MostrarAviso();
         }
 
         rb.linearVelocityY = impulsoSubida;
