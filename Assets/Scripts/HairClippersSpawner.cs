@@ -4,23 +4,25 @@ public class HairClippersSpawner : MonoBehaviour
 {
     [SerializeField] HairClipperController HairClipperPrefab;
     [SerializeField] PhaseController gerenciadorFases;
-    
-    float intervalo = 1.8f;
-    float limiteLaminaBaixo = -3.8f;
-    float limiteLaminaCima = 4.4f;
    
+    // quanto o vao abre e fecha nas fases com movimento
+    [SerializeField] float amplitudeMovimento = 0.5f;
 
     // power-ups que podem aparecer entre as maquinas
     [SerializeField] GameObject[] powerUpPrefabs;
     [SerializeField, Range(0, 1)] float chancePowerUp = 0.25f;
-
-    // altura do vao do proximo par de maquinas (sorteada com antecedencia)
-    float proximaAltura;
-    float alturaPowerUp;
-
+    
     // power-up que esta na tela agora (so pode existir um por vez)
     GameObject powerUpNaTela;
     bool powerUpAgendado;
+    
+    float intervalo = 1.8f;
+    // até pnde as laminas podem chegar
+    float limiteLaminaBaixo = -3.8f;
+    float limiteLaminaCima = 4.4f;
+    // altura do vao do proximo par de maquinas (sorteada com antecedencia)
+    float proximaAltura;
+    float alturaPowerUp;
     
     // sorteia o centro do vao sem deixar as laminas sairem da area visivel
     float SortearAltura(float vao)
@@ -32,7 +34,8 @@ public class HairClippersSpawner : MonoBehaviour
 
     void Start()
     {
-        proximaAltura = SortearAltura(gerenciadorFases.FaseAtual.vao);
+        Fase faseInicial = gerenciadorFases.FaseAtual;
+        proximaAltura = SortearAltura(faseInicial.vao + amplitudeMovimento);
 
         // invoca o spawn de maquinas no instante 0 e depois a cada intervalo
         InvokeRepeating("SpawnHairClipper", 0, intervalo);
@@ -47,12 +50,19 @@ public class HairClippersSpawner : MonoBehaviour
         
         // usa a altura ja sorteada e sorteia a do proximo vao
         float alturaAtual = proximaAltura;
-        proximaAltura = SortearAltura(fase.vao);
+        proximaAltura = SortearAltura(fase.vao + amplitudeMovimento);
 
         // Instancia um novo par de maquinas no jogo e ajusta o vao dele
         Vector3 posicao = new Vector3(transform.position.x, alturaAtual, 0);
         HairClipperController par = Instantiate(HairClipperPrefab, posicao, Quaternion.identity);
-        par.DefinirVao(fase.vao);
+        
+        float amplitude = 0;
+        if (fase.maquinasMovem)
+        {
+            amplitude = amplitudeMovimento;
+        }
+
+        par.DefinirVao(fase.vao, amplitude);
         
         // as vezes aparece um power-up no meio do caminho ate o proximo par,
         // mas so se nao tiver nenhum outro na tela (ou para aparecer)

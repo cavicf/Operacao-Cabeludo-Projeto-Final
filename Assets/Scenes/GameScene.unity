@@ -686,6 +686,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HairClippersSpawner
   HairClipperPrefab: {fileID: 3583375932158634494, guid: 714efb49b8119c2aeb4e455c245a1864, type: 3}
   gerenciadorFases: {fileID: 1380988860}
+  amplitudeMovimento: 0.5
   powerUpPrefabs:
   - {fileID: 63180684800517072, guid: d7d58846207aaa944a62a7d844c3dcb5, type: 3}
   - {fileID: 7104698510104547751, guid: 0f51d42a0bd0e764ca565ae8268442e9, type: 3}
@@ -1493,24 +1494,31 @@ MonoBehaviour:
   - nome: Aquecimento
     pontosParaComecar: 0
     vao: 4
+    maquinasMovem: 0
   - nome: Pegando o ritmo
     pontosParaComecar: 10
     vao: 3.6
+    maquinasMovem: 0
   - nome: "Infesta\xE7\xE3o"
     pontosParaComecar: 20
     vao: 3.6
+    maquinasMovem: 0
   - nome: Apertando
     pontosParaComecar: 35
     vao: 3.2
+    maquinasMovem: 0
   - nome: "M\xE1quinas vivas"
     pontosParaComecar: 50
     vao: 3.6
+    maquinasMovem: 1
   - nome: Caos
     pontosParaComecar: 70
-    vao: 3.2
+    vao: 3.4
+    maquinasMovem: 1
   - nome: Mestre Cabeludo
     pontosParaComecar: 90
-    vao: 3
+    vao: 3.2
+    maquinasMovem: 1
   avisoFase: {fileID: 782988379}
   duracaoAviso: 3
 --- !u!4 &1380988861

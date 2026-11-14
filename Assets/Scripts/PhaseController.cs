@@ -7,6 +7,8 @@ public class Fase
     public string nome;
     public int pontosParaComecar;
     public float vao;
+    // marca se as maquinas abrem e fecham nessa fase
+    public bool maquinasMovem;
 }
 
 public class PhaseController : MonoBehaviour
@@ -15,7 +17,7 @@ public class PhaseController : MonoBehaviour
     int indiceFase;
     
     [SerializeField] TMP_Text avisoFase;
-    [SerializeField] float duracaoAviso = 2f;
+    [SerializeField] float duracaoAviso = 3f;
     
     // a fase em que o jogo esta agora
     public Fase FaseAtual => fases[indiceFase];
@@ -46,7 +48,7 @@ public class PhaseController : MonoBehaviour
     
     public void MostrarAviso()
     {
-        // indiceFase comeca em 0, entao soma 1 para mostrar "Fase 2", "Fase 3"...
+        // indiceFase comeca em 0
         avisoFase.text = "Fase " + (indiceFase + 1) + "\n" + FaseAtual.nome;
         avisoFase.gameObject.SetActive(true);
         
