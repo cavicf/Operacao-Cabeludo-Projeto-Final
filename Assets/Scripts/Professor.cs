@@ -38,8 +38,14 @@ public class Professor : MonoBehaviour
     // efeito visual do power-up (bolhas, brilho, peruca) preso no professor
     GameObject efeitoAtual;
 
-    // escudo da peruca: aguenta uma batida em maquina
+    // escudo da peruca: aguenta uma batida em maquina ou 2 encostadas em inimigos
     public bool TemEscudo { get; set; }
+    public int DefesasContraInimigos { get; set; }
+
+    // ataque: frascos de minoxidil disparados com ENTER (so nas fases com inimigos)
+    [SerializeField] GameObject minoxidilPrefab;
+    [SerializeField] float intervaloAtaque = 0.35f;
+    float tempoUltimoAtaque = -10;
 
     // com a peruca o cabelo de verdade fica escondido (mostra o careca por baixo)
     bool esconderCabelo;
@@ -109,6 +115,12 @@ public class Professor : MonoBehaviour
             return;
         }
 
+        // durante a explicacao dos inimigos o professor nao pula
+        if (gerenciadorFases.Pausado)
+        {
+            return;
+        }
+
         if (!comecou)
         {
             // primeiro pulo: liga a fisica e comeca a gerar maquinas
@@ -122,6 +134,35 @@ public class Professor : MonoBehaviour
         }
 
         rb.linearVelocityY = impulsoSubida;
+    }
+
+    // chamado pelo PlayerInput quando aperta ENTER
+    void OnAttack()
+    {
+        // ENTER fecha a explicacao dos inimigos (sem disparar)
+        if (gerenciadorFases.Pausado)
+        {
+            gerenciadorFases.FecharTutorial();
+
+            // zera a queda para o jogador ter tempo de voltar a pular
+            rb.linearVelocityY = 0;
+            return;
+        }
+
+        // so ataca com o jogo rodando e nas fases que tem inimigos
+        if (!comecou || morreu || gerenciadorFases.Pausado || !gerenciadorFases.FaseAtual.temInimigos)
+        {
+            return;
+        }
+
+        // um tempinho entre um disparo e outro para nao virar metralhadora
+        if (Time.time - tempoUltimoAtaque < intervaloAtaque)
+        {
+            return;
+        }
+
+        tempoUltimoAtaque = Time.time;
+        Instantiate(minoxidilPrefab, transform.position + new Vector3(0.6f, 0, 0), Quaternion.identity);
     }
 
     // chamado quando o professor passa pelas maquinas
@@ -142,6 +183,52 @@ public class Professor : MonoBehaviour
             PowerUpItem item = other.GetComponentInParent<PowerUpItem>();
             AplicarPowerUp(item.CriarPowerUp(), item.EfeitoNoProfessor);
             Destroy(item.gameObject);
+        }
+        else if (other.CompareTag("Inimigo"))
+        {
+            // o inimigo explode ao encostar no professor
+            Inimigo inimigo = other.GetComponentInParent<Inimigo>();
+            LevarDanoInimigo();
+            inimigo.Explodir();
+        }
+    }
+
+    void LevarDanoInimigo()
+    {
+        // a peruca aguenta 2 inimigos antes de cair
+        if (TemEscudo && DefesasContraInimigos > 0)
+        {
+            DefesasContraInimigos--;
+            if (DefesasContraInimigos == 0)
+            {
+                DesativarPowerUp();
+            }
+            return;
+        }
+
+        PerderNivel();
+    }
+
+    // o cabelo volta 1 nivel, mas a pontuacao continua a mesma
+    void PerderNivel()
+    {
+        if (nivelCabelo > 0)
+        {
+            nivelCabelo--;
+            AtualizarCabelo();
+        }
+
+        // pisca avermelhado rapidinho para mostrar que levou dano
+        sr.color = new Color(1f, 0.5f, 0.5f);
+        CancelInvoke("VoltarCor");
+        Invoke("VoltarCor", 0.2f);
+    }
+
+    void VoltarCor()
+    {
+        if (!morreu)
+        {
+            sr.color = Color.white;
         }
     }
 
@@ -256,6 +343,7 @@ public class Professor : MonoBehaviour
 
         // feedback da batida: fica vermelho e o jogo entra em camera lenta
         morreu = true;
+        gerenciadorFases.CancelarTutorial();
         sr.color = Color.red;
         Time.timeScale = 0.3f;
 
