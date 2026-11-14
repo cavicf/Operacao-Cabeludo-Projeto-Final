@@ -25,6 +25,9 @@ public class PhaseController : MonoBehaviour
     [SerializeField] GameObject painelTutorialInimigos;
     bool tutorialMostrado;
 
+    // espera o professor sair do meio das maquinas antes de pausar
+    [SerializeField] float atrasoTutorial = 0.6f;
+
     // jogo parado esperando o jogador ler a explicacao
     public bool Pausado { get; private set; }
     
@@ -55,7 +58,8 @@ public class PhaseController : MonoBehaviour
             // na primeira fase com inimigos o jogo pausa para explicar as novidades
             if (FaseAtual.temInimigos && !tutorialMostrado)
             {
-                MostrarTutorial();
+                tutorialMostrado = true;
+                Invoke("MostrarTutorial", atrasoTutorial);
             }
             else
             {
@@ -66,7 +70,6 @@ public class PhaseController : MonoBehaviour
 
     void MostrarTutorial()
     {
-        tutorialMostrado = true;
         Pausado = true;
         painelTutorialInimigos.SetActive(true);
 
@@ -74,7 +77,13 @@ public class PhaseController : MonoBehaviour
         Time.timeScale = 0;
     }
 
-    // chamado pelo professor quando o jogador aperta SPACE
+    // chamado pelo professor quando ele morre antes da explicacao aparecer
+    public void CancelarTutorial()
+    {
+        CancelInvoke("MostrarTutorial");
+    }
+
+    // chamado pelo professor quando o jogador aperta ENTER
     public void FecharTutorial()
     {
         Pausado = false;

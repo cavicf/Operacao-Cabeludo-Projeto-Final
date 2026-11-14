@@ -115,10 +115,10 @@ public class Professor : MonoBehaviour
             return;
         }
 
-        // SPACE fecha a explicacao dos inimigos e o professor ja volta pulando
+        // durante a explicacao dos inimigos o professor nao pula
         if (gerenciadorFases.Pausado)
         {
-            gerenciadorFases.FecharTutorial();
+            return;
         }
 
         if (!comecou)
@@ -139,6 +139,16 @@ public class Professor : MonoBehaviour
     // chamado pelo PlayerInput quando aperta ENTER
     void OnAttack()
     {
+        // ENTER fecha a explicacao dos inimigos (sem disparar)
+        if (gerenciadorFases.Pausado)
+        {
+            gerenciadorFases.FecharTutorial();
+
+            // zera a queda para o jogador ter tempo de voltar a pular
+            rb.linearVelocityY = 0;
+            return;
+        }
+
         // so ataca com o jogo rodando e nas fases que tem inimigos
         if (!comecou || morreu || gerenciadorFases.Pausado || !gerenciadorFases.FaseAtual.temInimigos)
         {
@@ -333,6 +343,7 @@ public class Professor : MonoBehaviour
 
         // feedback da batida: fica vermelho e o jogo entra em camera lenta
         morreu = true;
+        gerenciadorFases.CancelarTutorial();
         sr.color = Color.red;
         Time.timeScale = 0.3f;
 
