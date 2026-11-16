@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
@@ -13,6 +14,14 @@ public class Professor : MonoBehaviour
 
     int pontos;
     [SerializeField] TMP_Text ScoreText;
+
+    // recorde da sessao (canto superior direito) e a animacao de novo recorde
+    [SerializeField] TMP_Text recordeText;
+    [SerializeField] NovoRecordeAnimacao animacaoNovoRecorde;
+
+    // a cabeca explode quando o professor morre
+    [SerializeField] ExplosaoCabeca explosaoCabecaPrefab;
+    [SerializeField] float esperaDepoisExplosao = 1.2f;
     
     [SerializeField] PhaseController gerenciadorFases;
 
@@ -40,6 +49,12 @@ public class Professor : MonoBehaviour
 
     // escudo da peruca: aguenta uma batida em maquina ou 2 encostadas em inimigos
     public bool TemEscudo { get; set; }
+
+    // logo depois da peruca quebrar uma maquina, a outra maquina do mesmo par
+    // ainda nao mata (para nao morrer encostando nas duas ao mesmo tempo)
+    [SerializeField] float tempoProtecaoPar = 0.3f;
+    HairClipperController parQuebrado;
+    float fimProtecaoPar;
     public int DefesasContraInimigos { get; set; }
 
     // ataque: frascos de minoxidil disparados com ENTER (so nas fases com inimigos)
@@ -77,6 +92,7 @@ public class Professor : MonoBehaviour
         pontos = 0;
         nivelCabelo = 0;
         AtualizarCabelo();
+        recordeText.text = GameData.recorde.ToString();
 
         // professor parado no ar ate o jogador apertar espaco
         rb.simulated = false;
@@ -237,6 +253,12 @@ public class Professor : MonoBehaviour
         pontos += quantidade;
         contadorNivel += quantidade;
         ScoreText.text = pontos.ToString();
+
+        // passou do recorde: o marcador do canto acompanha a pontuacao
+        if (pontos > GameData.recorde)
+        {
+            recordeText.text = pontos.ToString();
+        }
         
         // verifica se os pontos ja alcancaram a proxima fase
         gerenciadorFases.AtualizarFase(pontos);
@@ -333,22 +355,78 @@ public class Professor : MonoBehaviour
             return;
         }
 
-        // com a peruca, a batida em maquina destroi a maquina e gasta o escudo
-        if (TemEscudo && collision.collider.GetComponentInParent<HairClipperController>() != null)
+        HairClipperController par = collision.collider.GetComponentInParent<HairClipperController>();
+
+        // com a peruca, a batida em maquina quebra a maquina e gasta o escudo
+        if (TemEscudo && par != null)
         {
-            Destroy(collision.collider.gameObject);
+            QuebrarMaquina(collision);
             DesativarPowerUp();
+
+            parQuebrado = par;
+            fimProtecaoPar = Time.time + tempoProtecaoPar;
             return;
         }
 
-        // feedback da batida: fica vermelho e o jogo entra em camera lenta
+        // encostou na outra maquina do mesmo par logo em seguida: quebra ela tambem
+        if (par != null && par == parQuebrado && Time.time < fimProtecaoPar)
+        {
+            QuebrarMaquina(collision);
+            return;
+        }
+
         morreu = true;
         gerenciadorFases.CancelarTutorial();
-        sr.color = Color.red;
-        Time.timeScale = 0.3f;
+        StartCoroutine(Morrer());
+    }
 
-        // Invoke conta o tempo do jogo, entao 0.3s aqui sao ~1s de verdade
-        Invoke("GameOver", 0.3f);
+    void QuebrarMaquina(Collision2D collision)
+    {
+        // a maquina passa para o sprite destruido com animacao (em vez de sumir)
+        MaquinaDestruivel maquina = collision.collider.GetComponent<MaquinaDestruivel>();
+        if (maquina != null)
+        {
+            maquina.Destruir(collision.GetContact(0).point);
+        }
+        else
+        {
+            Destroy(collision.collider.gameObject);
+        }
+    }
+
+    IEnumerator Morrer()
+    {
+        // o jogo entra em camera lenta e a cabeca explode
+        Time.timeScale = 0.3f;
+        ExplodirCabeca();
+
+        // espera em tempo real, porque o jogo esta em camera lenta
+        yield return new WaitForSecondsRealtime(esperaDepoisExplosao);
+
+        // bateu o recorde da sessao: mostra a estrela antes do game over
+        if (pontos > GameData.recorde)
+        {
+            GameData.recorde = pontos;
+            yield return animacaoNovoRecorde.Mostrar(pontos);
+        }
+
+        GameOver();
+    }
+
+    void ExplodirCabeca()
+    {
+        // tira os efeitos de power-up (bolhas, brilho, peruca) para nao ficarem flutuando
+        if (efeitoAtual != null)
+        {
+            efeitoAtual.SetActive(false);
+        }
+
+        ExplosaoCabeca explosao = Instantiate(explosaoCabecaPrefab);
+        explosao.Explodir(sr);
+
+        // o professor some: agora so os pedacos da cabeca aparecem
+        sr.enabled = false;
+        rb.simulated = false;
     }
 
     void GameOver()
