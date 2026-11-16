@@ -78,6 +78,7 @@ MonoBehaviour:
   maquinaCima: {fileID: 4219496318767103838}
   maquinaBaixo: {fileID: 7719714460247777440}
   zonaPonto: {fileID: 7487449821778368538}
+  periodoMovimento: 2
 --- !u!1 &2926847704325827825
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,6 +90,7 @@ GameObject:
   - component: {fileID: 4219496318767103838}
   - component: {fileID: 1290681315229546681}
   - component: {fileID: 3418381427805047283}
+  - component: {fileID: 4515025168759071023}
   m_Layer: 0
   m_Name: maquinaCima
   m_TagString: Untagged
@@ -216,6 +218,28 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.6, y: 9.600488}
   m_EdgeRadius: 0
+--- !u!114 &4515025168759071023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2926847704325827825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c697f082c209cf64eac91ee7b84616fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MaquinaDestruivel
+  spriteRachada: {fileID: 21300000, guid: 2f87716876eedbd4b800a92390266003, type: 3}
+  spriteDestruida: {fileID: 21300000, guid: 5eca56d561298824091f1dc16fbea67e, type: 3}
+  somQuebrando: {fileID: 8300000, guid: 556e322f69b00c940b51aac439cd957c, type: 3}
+  explosaoPrefab: {fileID: 5371579973348434467, guid: 9e74cdbf769652350ba459310cab9993, type: 3}
+  quadrosFumaca:
+  - {fileID: 21300000, guid: a94150635c9c6009cb146fecd8a9d37f, type: 3}
+  - {fileID: 21300000, guid: 431e289e0255c6f409409e332991b182, type: 3}
+  dentesEmCima: 0
+  duracaoTremida: 0.3
+  intervaloFumaca: 0.35
 --- !u!1 &4280576620377407271
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,6 +329,7 @@ GameObject:
   - component: {fileID: 7719714460247777440}
   - component: {fileID: 6578338889102966551}
   - component: {fileID: 6710413529874387049}
+  - component: {fileID: 3481858033606302582}
   m_Layer: 0
   m_Name: maquinaBaixo
   m_TagString: Untagged
@@ -432,3 +457,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.6, y: 9.600148}
   m_EdgeRadius: 0
+--- !u!114 &3481858033606302582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5580416382744677957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c697f082c209cf64eac91ee7b84616fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MaquinaDestruivel
+  spriteRachada: {fileID: 21300000, guid: 524daf36ea85fd64f8fdcd5ad881ad8b, type: 3}
+  spriteDestruida: {fileID: 21300000, guid: 4910d9c3f4f60a6499b22ad47f44928b, type: 3}
+  somQuebrando: {fileID: 8300000, guid: 556e322f69b00c940b51aac439cd957c, type: 3}
+  explosaoPrefab: {fileID: 5371579973348434467, guid: 9e74cdbf769652350ba459310cab9993, type: 3}
+  quadrosFumaca:
+  - {fileID: 21300000, guid: a94150635c9c6009cb146fecd8a9d37f, type: 3}
+  - {fileID: 21300000, guid: 431e289e0255c6f409409e332991b182, type: 3}
+  dentesEmCima: 1
+  duracaoTremida: 0.3
+  intervaloFumaca: 0.35

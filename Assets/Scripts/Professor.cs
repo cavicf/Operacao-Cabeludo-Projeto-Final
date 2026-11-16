@@ -49,6 +49,12 @@ public class Professor : MonoBehaviour
 
     // escudo da peruca: aguenta uma batida em maquina ou 2 encostadas em inimigos
     public bool TemEscudo { get; set; }
+
+    // logo depois da peruca quebrar uma maquina, a outra maquina do mesmo par
+    // ainda nao mata (para nao morrer encostando nas duas ao mesmo tempo)
+    [SerializeField] float tempoProtecaoPar = 0.3f;
+    HairClipperController parQuebrado;
+    float fimProtecaoPar;
     public int DefesasContraInimigos { get; set; }
 
     // ataque: frascos de minoxidil disparados com ENTER (so nas fases com inimigos)
@@ -349,17 +355,43 @@ public class Professor : MonoBehaviour
             return;
         }
 
-        // com a peruca, a batida em maquina destroi a maquina e gasta o escudo
-        if (TemEscudo && collision.collider.GetComponentInParent<HairClipperController>() != null)
+        HairClipperController par = collision.collider.GetComponentInParent<HairClipperController>();
+
+        // com a peruca, a batida em maquina quebra a maquina e gasta o escudo
+        if (TemEscudo && par != null)
         {
-            Destroy(collision.collider.gameObject);
+            QuebrarMaquina(collision);
             DesativarPowerUp();
+
+            parQuebrado = par;
+            fimProtecaoPar = Time.time + tempoProtecaoPar;
+            return;
+        }
+
+        // encostou na outra maquina do mesmo par logo em seguida: quebra ela tambem
+        if (par != null && par == parQuebrado && Time.time < fimProtecaoPar)
+        {
+            QuebrarMaquina(collision);
             return;
         }
 
         morreu = true;
         gerenciadorFases.CancelarTutorial();
         StartCoroutine(Morrer());
+    }
+
+    void QuebrarMaquina(Collision2D collision)
+    {
+        // a maquina passa para o sprite destruido com animacao (em vez de sumir)
+        MaquinaDestruivel maquina = collision.collider.GetComponent<MaquinaDestruivel>();
+        if (maquina != null)
+        {
+            maquina.Destruir(collision.GetContact(0).point);
+        }
+        else
+        {
+            Destroy(collision.collider.gameObject);
+        }
     }
 
     IEnumerator Morrer()
