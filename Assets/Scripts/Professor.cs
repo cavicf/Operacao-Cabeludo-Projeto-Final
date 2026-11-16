@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
@@ -13,6 +14,14 @@ public class Professor : MonoBehaviour
 
     int pontos;
     [SerializeField] TMP_Text ScoreText;
+
+    // recorde da sessao (canto superior direito) e a animacao de novo recorde
+    [SerializeField] TMP_Text recordeText;
+    [SerializeField] NovoRecordeAnimacao animacaoNovoRecorde;
+
+    // a cabeca explode quando o professor morre
+    [SerializeField] ExplosaoCabeca explosaoCabecaPrefab;
+    [SerializeField] float esperaDepoisExplosao = 1.2f;
     
     [SerializeField] PhaseController gerenciadorFases;
 
@@ -77,6 +86,7 @@ public class Professor : MonoBehaviour
         pontos = 0;
         nivelCabelo = 0;
         AtualizarCabelo();
+        recordeText.text = GameData.recorde.ToString();
 
         // professor parado no ar ate o jogador apertar espaco
         rb.simulated = false;
@@ -237,6 +247,12 @@ public class Professor : MonoBehaviour
         pontos += quantidade;
         contadorNivel += quantidade;
         ScoreText.text = pontos.ToString();
+
+        // passou do recorde: o marcador do canto acompanha a pontuacao
+        if (pontos > GameData.recorde)
+        {
+            recordeText.text = pontos.ToString();
+        }
         
         // verifica se os pontos ja alcancaram a proxima fase
         gerenciadorFases.AtualizarFase(pontos);
@@ -341,14 +357,44 @@ public class Professor : MonoBehaviour
             return;
         }
 
-        // feedback da batida: fica vermelho e o jogo entra em camera lenta
         morreu = true;
         gerenciadorFases.CancelarTutorial();
-        sr.color = Color.red;
-        Time.timeScale = 0.3f;
+        StartCoroutine(Morrer());
+    }
 
-        // Invoke conta o tempo do jogo, entao 0.3s aqui sao ~1s de verdade
-        Invoke("GameOver", 0.3f);
+    IEnumerator Morrer()
+    {
+        // o jogo entra em camera lenta e a cabeca explode
+        Time.timeScale = 0.3f;
+        ExplodirCabeca();
+
+        // espera em tempo real, porque o jogo esta em camera lenta
+        yield return new WaitForSecondsRealtime(esperaDepoisExplosao);
+
+        // bateu o recorde da sessao: mostra a estrela antes do game over
+        if (pontos > GameData.recorde)
+        {
+            GameData.recorde = pontos;
+            yield return animacaoNovoRecorde.Mostrar(pontos);
+        }
+
+        GameOver();
+    }
+
+    void ExplodirCabeca()
+    {
+        // tira os efeitos de power-up (bolhas, brilho, peruca) para nao ficarem flutuando
+        if (efeitoAtual != null)
+        {
+            efeitoAtual.SetActive(false);
+        }
+
+        ExplosaoCabeca explosao = Instantiate(explosaoCabecaPrefab);
+        explosao.Explodir(sr);
+
+        // o professor some: agora so os pedacos da cabeca aparecem
+        sr.enabled = false;
+        rb.simulated = false;
     }
 
     void GameOver()
