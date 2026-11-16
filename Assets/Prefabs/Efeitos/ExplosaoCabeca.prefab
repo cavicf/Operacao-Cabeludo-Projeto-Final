@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7674406479301285958
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5233604231197024752}
+  - component: {fileID: 3086937923840432923}
+  m_Layer: 0
+  m_Name: ExplosaoCabeca
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5233604231197024752
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7674406479301285958}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3086937923840432923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7674406479301285958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7016df1f36708194b8096a0d1760825d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExplosaoCabeca
+  quadrosExplosao:
+  - {fileID: 21300000, guid: 5618e9f10b3ab2a47a15ccb71d24d49c, type: 3}
+  - {fileID: 21300000, guid: 437633221e672153d8c5e4c2f98c6bf8, type: 3}
+  - {fileID: 21300000, guid: a94150635c9c6009cb146fecd8a9d37f, type: 3}
+  - {fileID: 21300000, guid: 431e289e0255c6f409409e332991b182, type: 3}
+  tempoQuadro: 0.08
+  escalaExplosao: 2.5
+  somExplosao: {fileID: 8300000, guid: 2ae70be630f174e428fa9fd9c9d135c7, type: 3}
+  pedacos: 5
+  forca: 7
+  gravidade: 18
+  duracaoPedacos: 1.2
