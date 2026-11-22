@@ -78,6 +78,17 @@ public class Professor : MonoBehaviour
     bool comecou;
     [SerializeField] GameObject textoInicio;
     [SerializeField] HairClippersSpawner spawner;
+    
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip somMaquina;
+    [SerializeField] AudioClip somPowerUp;
+    [SerializeField] AudioClip somCabeludo;
+    [SerializeField] AudioClip somFranja;
+    [SerializeField] AudioClip somMorteAi;
+    [SerializeField] AudioClip somMorteAiAi;
+    [SerializeField] AudioClip somIhul;
+    float ultimoSomIhul = -10f;
+    int ultimoPontoSomCabeludo = 0;
 
     bool morreu;
 
@@ -141,6 +152,9 @@ public class Professor : MonoBehaviour
         {
             // primeiro pulo: liga a fisica e comeca a gerar maquinas
             comecou = true;
+            
+            audioSource.PlayOneShot(somMaquina);
+            
             rb.simulated = true;
             spawner.enabled = true;
             textoInicio.SetActive(false);
@@ -198,6 +212,9 @@ public class Professor : MonoBehaviour
             // pega a estrategia do item e some com ele da tela
             PowerUpItem item = other.GetComponentInParent<PowerUpItem>();
             AplicarPowerUp(item.CriarPowerUp(), item.EfeitoNoProfessor);
+            
+            audioSource.PlayOneShot(somPowerUp);
+            
             Destroy(item.gameObject);
         }
         else if (other.CompareTag("Inimigo"))
@@ -232,6 +249,8 @@ public class Professor : MonoBehaviour
         {
             nivelCabelo--;
             AtualizarCabelo();
+
+            audioSource.PlayOneShot(somFranja);
         }
 
         // pisca avermelhado rapidinho para mostrar que levou dano
@@ -250,24 +269,45 @@ public class Professor : MonoBehaviour
 
     void GanharPontos(int quantidade)
     {
+        // guarda os valores antes de ganhar pontos
+        int pontosAntes = pontos;
+        int nivelAntes = nivelCabelo;
+
         pontos += quantidade;
         contadorNivel += quantidade;
         ScoreText.text = pontos.ToString();
 
-        // passou do recorde: o marcador do canto acompanha a pontuacao
+        // atualiza o recorde
         if (pontos > GameData.recorde)
         {
             recordeText.text = pontos.ToString();
         }
-        
-        // verifica se os pontos ja alcancaram a proxima fase
+
+        // verifica se chegou na proxima fase
         gerenciadorFases.AtualizarFase(pontos);
 
-        // a cada "PontosPorNivel" pontos o professor ganha mais cabelo
+        // aumenta o cabelo normalmente
         while (contadorNivel >= PontosPorNivel)
         {
             contadorNivel -= PontosPorNivel;
             SubirNivel();
+        }
+
+        // fala a cada 15 pontos, se ganhou cabelo
+        // e nao esta com crescimento acelerado
+        if (PontosPorNivel == PontosPorNivelPadrao &&
+            nivelCabelo > nivelAntes &&
+            pontos - ultimoPontoSomCabeludo >= 15)
+        {
+            audioSource.PlayOneShot(somCabeludo);
+            ultimoPontoSomCabeludo = pontos;
+        }
+        // comemoracao ocasional ao ganhar pontos
+        else if (Time.time - ultimoSomIhul >= 8f &&
+                 Random.value < 0.2f)
+        {
+            audioSource.PlayOneShot(somIhul);
+            ultimoSomIhul = Time.time;
         }
     }
 
@@ -377,6 +417,15 @@ public class Professor : MonoBehaviour
 
         morreu = true;
         gerenciadorFases.CancelarTutorial();
+
+        // escolhe aleatoriamente um dos dois sons de morte
+        AudioClip somMorte = Random.value < 0.5f
+            ? somMorteAi
+            : somMorteAiAi;
+        
+        // reproduz o som escolhido
+        audioSource.PlayOneShot(somMorte);
+
         StartCoroutine(Morrer());
     }
 
