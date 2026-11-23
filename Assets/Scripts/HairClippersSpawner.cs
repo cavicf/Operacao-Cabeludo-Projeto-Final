@@ -11,6 +11,12 @@ public class HairClippersSpawner : MonoBehaviour
     // power-ups que podem aparecer entre as maquinas
     [SerializeField] GameObject[] powerUpPrefabs;
     [SerializeField, Range(0, 1)] float chancePowerUp = 0.25f;
+
+    // o power-up aparece numa altura sorteada, longe do caminho "facil" entre os vaos,
+    // para o jogador ter que arriscar para pegar
+    [SerializeField] float distanciaMinimaDoCaminho = 1.2f;
+    // folga em relacao ao chao e ao teto, para o item nunca ficar impossivel de pegar
+    [SerializeField] float margemPowerUp = 0.6f;
     
     // power-up que esta na tela agora (so pode existir um por vez)
     GameObject powerUpNaTela;
@@ -71,8 +77,9 @@ public class HairClippersSpawner : MonoBehaviour
         // mas so se nao tiver nenhum outro na tela (ou para aparecer)
         if (PodeSpawnarPowerUp() && Random.value < chancePowerUp)
         {
-            // altura media entre o vao atual e o proximo
-            alturaPowerUp = (alturaAtual + proximaAltura) / 2;
+            // sorteia a altura, fugindo do caminho medio entre o vao atual e o proximo
+            float caminho = (alturaAtual + proximaAltura) / 2;
+            alturaPowerUp = SortearAlturaPowerUp(caminho);
             powerUpAgendado = true;
             Invoke("SpawnPowerUp", intervalo / 2);
         }
@@ -107,6 +114,25 @@ public class HairClippersSpawner : MonoBehaviour
         {
             proximaAltura = AlturaCentro;
         }
+    }
+
+    float SortearAlturaPowerUp(float caminho)
+    {
+        float alturaMin = limiteLaminaBaixo + margemPowerUp;
+        float alturaMax = limiteLaminaCima - margemPowerUp;
+
+        // tenta algumas vezes uma altura qualquer que fique longe do caminho
+        for (int tentativa = 0; tentativa < 10; tentativa++)
+        {
+            float altura = Random.Range(alturaMin, alturaMax);
+            if (Mathf.Abs(altura - caminho) >= distanciaMinimaDoCaminho)
+            {
+                return altura;
+            }
+        }
+
+        // nao achou (caminho bem no meio): vai para o lado que tiver mais espaco
+        return caminho - alturaMin > alturaMax - caminho ? alturaMin : alturaMax;
     }
 
     bool PodeSpawnarPowerUp()
