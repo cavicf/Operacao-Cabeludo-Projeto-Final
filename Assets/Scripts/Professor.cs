@@ -37,12 +37,18 @@ public class Professor : MonoBehaviour
     // (contador separado para funcionar mesmo quando ganha mais de 1 ponto por vez)
     int contadorNivel;
 
+    // usado pelo HUD para mostrar quantos pontos faltam para o proximo nivel de cabelo
+    public int ContadorNivel => contadorNivel;
+
     // quantos pontos o professor ganha ao passar por um par de maquinas
     public int MultiplicadorPontos { get; set; } = 1;
 
     // power-up ativo no momento (padrao Strategy) e o tempo que falta para acabar
     IPowerUp powerUpAtual;
     float tempoPowerUp;
+
+    // quanto tempo falta para o power-up atual acabar (0 se nao tem nenhum)
+    public float TempoRestantePowerUp => powerUpAtual == null ? 0 : tempoPowerUp;
 
     // efeito visual do power-up (bolhas, brilho, peruca) preso no professor
     GameObject efeitoAtual;
