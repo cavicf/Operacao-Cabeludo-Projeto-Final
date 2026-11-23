@@ -24,6 +24,9 @@ public class HairClippersSpawner : MonoBehaviour
     float proximaAltura;
     float alturaPowerUp;
     
+    // altura do meio da area onde as maquinas podem ficar
+    public float AlturaCentro => (limiteLaminaBaixo + limiteLaminaCima) / 2;
+
     // sorteia o centro do vao sem deixar as laminas sairem da area visivel
     float SortearAltura(float vao)
     {
@@ -72,6 +75,37 @@ public class HairClippersSpawner : MonoBehaviour
             alturaPowerUp = (alturaAtual + proximaAltura) / 2;
             powerUpAgendado = true;
             Invoke("SpawnPowerUp", intervalo / 2);
+        }
+    }
+
+    // coloca no meio da tela o primeiro par de maquinas que esta na frente do professor
+    // (se ainda nao tiver nenhum na frente, o proximo a nascer ja vem no meio)
+    public void CentralizarProximoPar(float posicaoProfessor)
+    {
+        HairClipperController maisPerto = null;
+        foreach (HairClipperController par in FindObjectsByType<HairClipperController>(FindObjectsSortMode.None))
+        {
+            // os power-ups tambem usam esse script para andar, entao ficam de fora
+            if (par.GetComponent<PowerUpItem>() != null)
+            {
+                continue;
+            }
+
+            float x = par.transform.position.x;
+            if (x > posicaoProfessor && (maisPerto == null || x < maisPerto.transform.position.x))
+            {
+                maisPerto = par;
+            }
+        }
+
+        if (maisPerto != null)
+        {
+            Vector3 posicao = maisPerto.transform.position;
+            maisPerto.transform.position = new Vector3(posicao.x, AlturaCentro, posicao.z);
+        }
+        else
+        {
+            proximaAltura = AlturaCentro;
         }
     }
 

@@ -20,8 +20,13 @@ namespace UI
                 return;
             }
 
-            // no menu inicial fecha o jogo (so funciona no jogo buildado, no Editor nao faz nada)
+            // no menu inicial fecha o jogo
             Application.Quit();
+
+#if UNITY_EDITOR
+            // no Editor o Application.Quit nao faz nada, entao para o modo Play
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
         }
     }
 }

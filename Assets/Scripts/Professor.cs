@@ -78,6 +78,10 @@ public class Professor : MonoBehaviour
     bool comecou;
     [SerializeField] GameObject textoInicio;
     [SerializeField] HairClippersSpawner spawner;
+
+    // tutorial "como jogar" que aparece antes do "aperte SPACE para jogar"
+    [SerializeField] GameObject painelComoJogar;
+    bool lendoComoJogar;
     
     [SerializeField] AudioSource audioSource;
     [SerializeField] AudioClip somMaquina;
@@ -108,7 +112,12 @@ public class Professor : MonoBehaviour
         // professor parado no ar ate o jogador apertar espaco
         rb.simulated = false;
         spawner.enabled = false;
-        textoInicio.SetActive(true);
+
+        // vindo do "Jogar" do menu inicial mostra o tutorial antes da tela de "prepare-se"
+        // (no "Tente novamente" do game over vai direto para o jogo)
+        lendoComoJogar = !GameData.jogou;
+        painelComoJogar.SetActive(lendoComoJogar);
+        textoInicio.SetActive(!lendoComoJogar);
     }
 
     void Update()
@@ -142,8 +151,8 @@ public class Professor : MonoBehaviour
             return;
         }
 
-        // durante a explicacao dos inimigos o professor nao pula
-        if (gerenciadorFases.Pausado)
+        // durante as explicacoes (como jogar e inimigos) o professor nao pula
+        if (lendoComoJogar || gerenciadorFases.Pausado)
         {
             return;
         }
@@ -169,13 +178,20 @@ public class Professor : MonoBehaviour
     // chamado pelo PlayerInput quando aperta ENTER
     void OnAttack()
     {
+        // ENTER fecha o tutorial "como jogar" e mostra o "aperte SPACE para jogar"
+        if (lendoComoJogar)
+        {
+            lendoComoJogar = false;
+            painelComoJogar.SetActive(false);
+            textoInicio.SetActive(true);
+            return;
+        }
+
         // ENTER fecha a explicacao dos inimigos (sem disparar)
         if (gerenciadorFases.Pausado)
         {
             gerenciadorFases.FecharTutorial();
-
-            // zera a queda para o jogador ter tempo de voltar a pular
-            rb.linearVelocityY = 0;
+            RecomecarNoCentro();
             return;
         }
 
@@ -193,6 +209,20 @@ public class Professor : MonoBehaviour
 
         tempoUltimoAtaque = Time.time;
         Instantiate(minoxidilPrefab, transform.position + new Vector3(0.6f, 0, 0), Quaternion.identity);
+    }
+
+    // depois da explicacao dos inimigos, o professor e o proximo par de maquinas
+    // ficam no meio da tela, para facilitar o primeiro ponto
+    void RecomecarNoCentro()
+    {
+        float centro = spawner.AlturaCentro;
+        rb.position = new Vector2(rb.position.x, centro);
+        transform.position = new Vector3(transform.position.x, centro, 0);
+
+        // zera a queda para o jogador ter tempo de voltar a pular
+        rb.linearVelocityY = 0;
+
+        spawner.CentralizarProximoPar(transform.position.x);
     }
 
     // chamado quando o professor passa pelas maquinas
