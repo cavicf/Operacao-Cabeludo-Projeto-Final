@@ -6,6 +6,7 @@ using TMPro;
 // - Shampoo: um "2x" azul (pontos em dobro)
 // - Tonico: frasco + seta verde e uma barrinha que enche a cada ponto;
 //   quando enche, o cabelo cresce (com o tonico ela tem so 2 quadradinhos em vez de 5)
+// - Peruca: um escudinho prata (rachado depois que ja segurou um inimigo)
 // Os indicadores aparecem com um "pulo", e piscam nos ultimos segundos do efeito.
 public class IndicadoresPowerUp : MonoBehaviour
 {
@@ -18,6 +19,9 @@ public class IndicadoresPowerUp : MonoBehaviour
 
     [SerializeField] RectTransform indicadorShampoo;
     [SerializeField] RectTransform indicadorTonico;
+    [SerializeField] Image indicadorPeruca;
+    [SerializeField] Sprite escudoInteiro;
+    [SerializeField] Sprite escudoRachado;
 
     // quadradinhos da barra de crescimento do tonico
     [SerializeField] Image[] segmentos;
@@ -29,6 +33,8 @@ public class IndicadoresPowerUp : MonoBehaviour
     RectTransform grupo;
     bool shampooAntes;
     bool tonicoAntes;
+    bool perucaAntes;
+    float tempoEntradaPeruca = 10;
     float tempoEntradaShampoo = 10;
     float tempoEntradaTonico = 10;
     int contadorAntes;
@@ -39,6 +45,7 @@ public class IndicadoresPowerUp : MonoBehaviour
         grupo = (RectTransform)transform;
         indicadorShampoo.gameObject.SetActive(false);
         indicadorTonico.gameObject.SetActive(false);
+        indicadorPeruca.gameObject.SetActive(false);
     }
 
     void Update()
@@ -49,17 +56,28 @@ public class IndicadoresPowerUp : MonoBehaviour
 
         bool shampoo = professor.MultiplicadorPontos > 1;
         bool tonico = professor.PontosPorNivel < Professor.PontosPorNivelPadrao;
+        bool peruca = professor.TemEscudo;
 
         if (shampoo && !shampooAntes) tempoEntradaShampoo = 0;
         if (tonico && !tonicoAntes) tempoEntradaTonico = 0;
+        if (peruca && !perucaAntes) tempoEntradaPeruca = 0;
+        perucaAntes = peruca;
         shampooAntes = shampoo;
         tonicoAntes = tonico;
 
         tempoEntradaShampoo += Time.unscaledDeltaTime;
         tempoEntradaTonico += Time.unscaledDeltaTime;
+        tempoEntradaPeruca += Time.unscaledDeltaTime;
 
         Mostrar(indicadorShampoo, shampoo, tempoEntradaShampoo);
         Mostrar(indicadorTonico, tonico, tempoEntradaTonico);
+        Mostrar(indicadorPeruca.rectTransform, peruca, tempoEntradaPeruca);
+
+        // a peruca aguenta 2 inimigos: depois do primeiro o escudo aparece rachado
+        if (peruca)
+        {
+            indicadorPeruca.sprite = professor.DefesasContraInimigos >= 2 ? escudoInteiro : escudoRachado;
+        }
 
         if (tonico)
         {
